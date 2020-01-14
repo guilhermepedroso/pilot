@@ -264,6 +264,7 @@ const transactionSpec = {
   created_at: pipe(prop('date_created'), stringToMoment),
   customer: getCustomerProp,
   external_id: propOr(null, 'reference_key'),
+  fraud_reimbursed: prop('fraud_reimbursed'),
   id: prop('id'),
   metadata: prop('metadata'),
   payment: {
@@ -296,7 +297,11 @@ const transactionSpec = {
   risk_level: prop('risk_level'),
   referer: prop('referer'),
   soft_descriptor: prop('soft_descriptor'),
-  status: prop('status'),
+  status: ifElse(
+    propEq('fraud_reimbursed', true),
+    always('fraud_reimbursed'),
+    prop('status')
+  ),
   status_reason: ifElse(
     propEq('status', 'refused'),
     prop('refuse_reason'),
