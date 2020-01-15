@@ -26,6 +26,7 @@ const getOperationLegendStatus = pipe(
 const Events = ({
   boleto,
   color,
+  fraudReimbursed,
   id,
   operations,
   payment,
@@ -42,6 +43,9 @@ const Events = ({
     const legendStatus = getOperationLegendStatus(operation)
     const number = operations.length - index
 
+    const isChargeback = type === 'chargeback' || type === 'chargeback_refund'
+    const isChargebackCovered = isChargeback && fraudReimbursed === true
+
     return (
       <Event
         active={index === 0}
@@ -49,10 +53,14 @@ const Events = ({
         isMoreThanOneOperation={operations.length > 1}
         key={key}
         number={number}
-        title={legendStatus.title}
+        title={isChargebackCovered === true
+          ? t('fraud_reimbursed.title')
+          : legendStatus.title
+        }
       >
         <EventDetails
           boleto={boleto}
+          fraudReimbursed={isChargebackCovered}
           id={id}
           legendStatus={legendStatus}
           operation={operation}
@@ -72,6 +80,7 @@ Events.propTypes = {
     url: PropTypes.string,
   }),
   color: PropTypes.string.isRequired,
+  fraudReimbursed: PropTypes.bool,
   id: PropTypes.number,
   operations: PropTypes.arrayOf(PropTypes.shape({
     cycle: PropTypes.number,
@@ -88,6 +97,7 @@ Events.propTypes = {
 
 Events.defaultProps = {
   boleto: null,
+  fraudReimbursed: null,
   id: null,
   riskLevel: 'unknown',
 }
