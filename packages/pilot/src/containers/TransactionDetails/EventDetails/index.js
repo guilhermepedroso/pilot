@@ -10,6 +10,7 @@ import style from './style.css'
 /* eslint-disable camelcase */
 const EventDetails = ({
   boleto,
+  fraudReimbursed,
   id,
   legendStatus,
   operation,
@@ -34,7 +35,15 @@ const EventDetails = ({
 
   return (
     <section className={style.eventContent}>
-      <div className={style.eventDescription}>
+      {fraudReimbursed === true
+        && (
+          <div className={style.eventDescription}>
+            <p>{t('fraud_reimbursed.action')}</p>
+          </div>
+        )
+      }
+
+      <div className={style.eventDetails}>
         <p>
           {legendStatus.status}
         </p>
@@ -43,7 +52,7 @@ const EventDetails = ({
             `${date.format('L')} ${t('at')} ${date.format('HH:mm')}`
           }
         </p>
-        {(type === 'capture' || type === 'conciliate')
+        {(type === 'capture' || type === 'conciliate' || fraudReimbursed)
           && status === 'success'
           && (
             <p>
@@ -92,6 +101,7 @@ EventDetails.propTypes = {
     due_date: PropTypes.instanceOf(moment),
     url: PropTypes.string,
   }),
+  fraudReimbursed: PropTypes.bool,
   id: PropTypes.number,
   legendStatus: PropTypes.shape({
     status: PropTypes.string,
@@ -111,6 +121,7 @@ EventDetails.propTypes = {
 
 EventDetails.defaultProps = {
   boleto: null,
+  fraudReimbursed: null,
   id: null,
   riskLevel: 'unknown',
 }

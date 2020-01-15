@@ -9,11 +9,19 @@
     text-transform: capitalize;
   }
 
-  & .eventDescription {
+  & .eventDetails {
     line-height: 1.6;
 
     & p {
       margin: 0;
+    }
+  }
+
+  & .eventDescription {
+    line-height: 1;
+
+    & p {
+      margin: 0 0 var(--spacing-small) 0;
     }
   }
 }
